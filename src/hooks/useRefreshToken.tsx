@@ -5,13 +5,13 @@ import useAuth from "./useAuth"
 function useRefreshToken() {
   const {SetAuth} = useAuth();
   const refresh = async ()=>{
-    const response = await axios.get('refresh',{
+    const response = await axios.get('/refresh',{
       withCredentials: true
     })
     if(SetAuth){
       SetAuth((prev:AuthModel)=>{
-        console.log(JSON.stringify(prev))
-        console.log(response.data.accessToken)
+        console.log("espuesta refresh",JSON.stringify(prev))
+        console.log("espuesta refresh 2",response.data.accessToken)
         return {...prev,accesToken:response.data.accessToken}
       })
     }

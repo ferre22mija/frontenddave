@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react"
 import { AuthModel } from "../../model/authModel";
-import axios from "../../api/axios";
+import useRefreshToken from "../../hooks/useRefreshToken";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 
 function User() {
   const [users,SetUsers] = useState<Array<AuthModel>>();
-
+  const refresh = useRefreshToken();
+  const axiosPrivate =useAxiosPrivate();
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
     const getUsers = async () =>{
       try{
-        const response = await axios.get('/employee',{
-          withCredentials: true,
+        const response = await axiosPrivate.get('/employee',{
           signal:controller.signal
         }) 
         console.log(response.data)
@@ -31,9 +32,10 @@ function User() {
     <article>
       <h2>Users</h2>
       {users?.length
-      ? (<ul>{users.map((user,i)=> <li key={i}>{user?.usuario}</li>)}</ul>): <h3>not found users</h3>
+      ? (<ul>{users.map((user,i)=> <li key={i}>{user?.username}</li>)}</ul>): <h3>not found users</h3>
 
       }
+      <button onClick={()=>{refresh()}}>refresh</button>
     </article>
   )
 }

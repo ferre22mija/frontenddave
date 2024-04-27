@@ -12,7 +12,7 @@ function useRefreshToken() {
       SetAuth((prev:AuthModel)=>{
         console.log("espuesta refresh",JSON.stringify(prev))
         console.log("espuesta refresh 2",response.data.accessToken)
-        return {...prev,accesToken:response.data.accessToken}
+        return {...prev,accessToken:response.data.accessToken}
       })
     }
     

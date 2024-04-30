@@ -2,11 +2,14 @@ import { useEffect, useState } from "react"
 import { AuthModel } from "../../model/authModel";
 import useRefreshToken from "../../hooks/useRefreshToken";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function User() {
   const [users,SetUsers] = useState<Array<AuthModel>>();
   const refresh = useRefreshToken();
   const axiosPrivate =useAxiosPrivate();
+  const navigate = useNavigate();
+  const location = useLocation();
   useEffect(() => {
     let isMounted = true;
     const controller = new AbortController();
@@ -19,12 +22,13 @@ function User() {
         isMounted && SetUsers(response.data);
       }catch(err){
         console.log(err)
+        navigate('/login',{state:{from:location},replace:true})
       }
     }
     getUsers();
     return () => {
       isMounted = false;
-      controller.abort();
+      isMounted && controller.abort();
     }
   }, [])
   

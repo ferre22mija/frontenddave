@@ -1,23 +1,28 @@
-import axios from "../api/axios"
-import { AuthModel } from "../model/authModel"
-import useAuth from "./useAuth"
+import axios from "../api/axios";
+import { AuthModel } from "../model/authModel";
+import useAuth from "./useAuth";
 
 function useRefreshToken() {
-  const {SetAuth} = useAuth();
-  const refresh = async ()=>{
-    const response = await axios.get('/refresh',{
-      withCredentials: true
-    })
-    if(SetAuth){
-      SetAuth((prev:AuthModel)=>{
-        console.log("espuesta refresh",JSON.stringify(prev))
-        console.log("espuesta refresh 2",response.data.accessToken)
-        return {...prev,accessToken:response.data.accessToken}
-      })
+  const { auth,SetAuth } = useAuth();
+  const refresh = async () => {
+    const response = await axios.get("/refresh", {
+      withCredentials: true,
+    });
+    if (SetAuth) {
+      console.log("auth actual",auth)
+      SetAuth((prev: AuthModel) => {
+        console.log("respuesta refresh", prev);
+        console.log("respuesta refresh 2", response.data.accessToken);
+        return {
+          ...prev,
+          roles: response.data.roles,
+          accessToken: response.data.accessToken,
+        };
+      });
     }
     return response.data.accessToken;
-  }
-  
-  return refresh
+  };
+
+  return refresh;
 }
-export default useRefreshToken
+export default useRefreshToken;

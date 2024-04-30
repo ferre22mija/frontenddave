@@ -7,11 +7,12 @@ import Home from "./components/protected/Home";
 import Editor from "./components/protected/Editor";
 import Admin from "./components/protected/Admin";
 import RequireAuth from "./components/RequireAuth";
+import PersistLogin from "./components/PersistLogin";
 const ROLES = {
-  "admin": 5150,
-  "editor":1984,
-  "user":2001
-}
+  admin: 5150,
+  editor: 1984,
+  user: 2001,
+};
 function App() {
   return (
     <>
@@ -21,12 +22,14 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="unauthorized" element={<UnAuthorised />} />
           {/**protected */}
-          <Route element={<RequireAuth allowedRoles={[ROLES.admin]} />}>
-            <Route path="/" element={<Home />} />
-            <Route path="admin" element={<Admin />} />
-          </Route>
-          <Route element={<RequireAuth allowedRoles={[ROLES.user]} />}>
-            <Route path="editor" element={<Editor />} />
+          <Route element={<PersistLogin />}>
+            <Route element={<RequireAuth allowedRoles={[ROLES.admin]} />}>
+              <Route path="/" element={<Home />} />
+              <Route path="admin" element={<Admin />} />
+            </Route>
+            <Route element={<RequireAuth allowedRoles={[ROLES.user]} />}>
+              <Route path="editor" element={<Editor />} />
+            </Route>
           </Route>
 
           {/**catch all */}

@@ -20,17 +20,12 @@ function useAxiosPrivate() {
         const responseIntercept = axiosPrivate.interceptors.response.use(
             response => response,
             async (error) => {
-                console.log("error interceptor",error)
-                console.log("context auth",auth)
                 const prevRequest = error?.config;
                 if (error?.response?.status === 403 && !prevRequest?.sent) {
-                    console.log("encontró error 403 jiji")
                     prevRequest.sent = true;
                     const newAccessToken = await refresh();
                     prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
                     return axiosPrivate(prevRequest);
-                }else{
-                    console.log("mana ingresamunchu")
                 }
                 return Promise.reject(error);
             }
